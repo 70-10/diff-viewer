@@ -4,9 +4,19 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,6 +37,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        with:
+          static_site_generator: next
+
       - name: Install
         run: |
           pnpm install --frozen-lockfile
@@ -39,11 +54,18 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          user_name: github-actions[bot]
-          user_email: github-actions[bot]@users.noreply.github.com
-          publish_dir: ./out
-          publish_branch: gh-pages
+          path: ./out
+
+  deply:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
