@@ -1,8 +1,8 @@
 "use client";
-import { decode, encode } from "@/lib/base64";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useState } from "react";
 import { diffLines } from "diff";
+import lz from "lz-string";
 
 type DiffResult = {
   added?: boolean;
@@ -15,20 +15,33 @@ export default function Home() {
   const data = searchParams.get("data");
 
   const { textA, textB } = data
-    ? (JSON.parse(decode(data)) as { textA: string; textB: string })
+    ? (JSON.parse(lz.decompressFromEncodedURIComponent(data)) as {
+        textA: string;
+        textB: string;
+      })
     : { textA: "", textB: "" };
 
   const [text1, setText1] = useState<string>(textA);
   const [text2, setText2] = useState<string>(textB);
   const [diffs, setDiffs] = useState<DiffResult[]>(diffLines(textA, textB));
+  const [copyButtonText, setCopyButtonText] = useState<string>("Copy");
 
   const calculateDiff = (a: string, b: string) => {
     setDiffs(diffLines(a, b));
   };
 
+  const copyUrl = () => {
+    navigator.clipboard.writeText(
+      `${window.location.href}?data=${lz.compressToEncodedURIComponent(
+        JSON.stringify({ textA: text1, textB: text2 })
+      )}`
+    );
+  };
+
   return (
     <main className="p-5">
       <h1 className="text-4xl font-bold p-5">Diff Viewer</h1>
+
       <div className="p-4">
         <div className="flex mb-4 space-x-4">
           <textarea
@@ -87,6 +100,32 @@ export default function Home() {
             return <Fragment key={index}>{lines}</Fragment>;
           })}
         </pre>
+      </div>
+
+      <div className="p-4 flex space-x-4">
+        <input
+          type="text"
+          className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-100 focus:border-blue-100 block w-full p-2.5"
+          value={`${
+            window.location.href
+          }?data=${lz.compressToEncodedURIComponent(
+            JSON.stringify({ textA: text1, textB: text2 })
+          )}`}
+        />
+        <button
+          type="button"
+          className="text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-lg px-3 py-3"
+          onClick={() => {
+            copyUrl();
+
+            setCopyButtonText("Copied");
+            setTimeout(() => {
+              setCopyButtonText("Copy");
+            }, 1000);
+          }}
+        >
+          {copyButtonText}
+        </button>
       </div>
     </main>
   );
