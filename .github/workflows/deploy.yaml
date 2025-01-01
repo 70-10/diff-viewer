@@ -59,7 +59,7 @@ jobs:
         with:
           path: ./out
 
-  deply:
+  deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
