@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { Fragment, useState } from "react";
 import { diffLines } from "diff";
 import lz from "lz-string";
+import { createShareUrl } from "@/create-share-url";
 
 type DiffResult = {
   added?: boolean;
@@ -32,9 +33,7 @@ export default function Home() {
 
   const copyUrl = () => {
     navigator.clipboard.writeText(
-      `${window.location.href}?data=${lz.compressToEncodedURIComponent(
-        JSON.stringify({ textA: text1, textB: text2 })
-      )}`
+      createShareUrl(window.location.href, text1, text2)
     );
   };
 
@@ -106,11 +105,7 @@ export default function Home() {
         <input
           type="text"
           className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-100 focus:border-blue-100 block w-full p-2.5"
-          value={`${
-            window.location.href.split("?")[0]
-          }?data=${lz.compressToEncodedURIComponent(
-            JSON.stringify({ textA: text1, textB: text2 })
-          )}`}
+          value={createShareUrl(window.location.href, text1, text2)}
         />
         <button
           type="button"
