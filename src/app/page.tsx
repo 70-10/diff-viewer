@@ -102,11 +102,9 @@ export default function Home() {
       </div>
 
       <div className="p-4 flex space-x-4">
-        <input
-          type="text"
-          className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-100 focus:border-blue-100 block w-full p-2.5"
-          value={createShareUrl(window.location.href, text1, text2)}
-        />
+        <span className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-100 focus:border-blue-100 block w-full p-2.5">
+          {createShareUrl(window.location.href, text1, text2)}
+        </span>
         <button
           type="button"
           className="text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-lg px-3 py-3"
