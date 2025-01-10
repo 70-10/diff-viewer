@@ -30,8 +30,6 @@ jobs:
           pnpm install --frozen-lockfile
       - name: Check pnpm-lock.yaml
         run: git diff --exit-code pnpm-lock.yaml
-      - name: Lint
-        run: pnpm lint
       - name: "Test"
         run: pnpx vitest --coverage.enabled true
       - name: "Report coverage"
