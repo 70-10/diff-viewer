@@ -10,7 +10,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "diff": "5.1.0",
+    "diff": "7.0.0",
     "lz-string": "1.5.0",
     "next": "13.4.19",
     "react": "18.2.0",
