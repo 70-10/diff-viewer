@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { diffLines } from "diff";
 import lz from "lz-string";
 import { createShareUrl } from "@/create-share-url";
@@ -26,6 +26,11 @@ export default function Home() {
   const [text2, setText2] = useState<string>(textB);
   const [diffs, setDiffs] = useState<DiffResult[]>(diffLines(textA, textB));
   const [copyButtonText, setCopyButtonText] = useState<string>("Copy");
+  const [currentURL, setCurrentURL] = useState<string>("");
+
+  useEffect(() => {
+    setCurrentURL(window.location.href);
+  }, []);
 
   const calculateDiff = (a: string, b: string) => {
     setDiffs(diffLines(a, b));
@@ -33,7 +38,7 @@ export default function Home() {
 
   const copyUrl = () => {
     navigator.clipboard.writeText(
-      createShareUrl(window.location.href, text1, text2)
+      createShareUrl(currentURL, text1, text2)
     );
   };
 
@@ -105,7 +110,8 @@ export default function Home() {
         <input
           type="text"
           className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-100 focus:border-blue-100 block w-full p-2.5"
-          value={createShareUrl(window.location.href, text1, text2)}
+          value={createShareUrl(currentURL, text1, text2)}
+          readOnly
         />
         <button
           type="button"
