@@ -36,7 +36,7 @@ jobs:
         if: always()
         uses: davelosert/vitest-coverage-report-action@v2
       - name: Install Playwright Browsers
-        run: pnpx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
         run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
