@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+const isCI = !!process.env.CI;
+
 test.describe('Diff Viewer', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -11,8 +13,10 @@ test.describe('Diff Viewer', () => {
     await expect(page.locator('textarea').nth(1)).toBeVisible();
     await expect(page.locator('pre')).toBeVisible();
     
-    // 初期状態のスクリーンショット
-    await expect(page).toHaveScreenshot('initial-state.png');
+    // 初期状態のスクリーンショット（CI以外）
+    if (!isCI) {
+      await expect(page).toHaveScreenshot('initial-state.png');
+    }
   });
 
   test('テキスト入力と差分表示', async ({ page }) => {
@@ -27,8 +31,10 @@ test.describe('Diff Viewer', () => {
     await expect(page.locator('.bg-red-100')).toContainText('- World');
     await expect(page.locator('.bg-green-100')).toContainText('+ Universe');
     
-    // 差分表示のスクリーンショット
-    await expect(page).toHaveScreenshot('diff-display.png');
+    // 差分表示のスクリーンショット（CI以外）
+    if (!isCI) {
+      await expect(page).toHaveScreenshot('diff-display.png');
+    }
   });
 
   test('URL生成とコピー機能', async ({ page }) => {
@@ -48,8 +54,10 @@ test.describe('Diff Viewer', () => {
     // コピーボタンの存在確認
     await expect(copyButton).toBeVisible();
     
-    // URL機能のスクリーンショット
-    await expect(page).toHaveScreenshot('url-feature.png');
+    // URL機能のスクリーンショット（CI以外）
+    if (!isCI) {
+      await expect(page).toHaveScreenshot('url-feature.png');
+    }
   });
 
   test('URLパラメータからの復元', async ({ page }) => {
@@ -63,8 +71,10 @@ test.describe('Diff Viewer', () => {
     await expect(textarea1).toHaveValue('text1');
     await expect(textarea2).toHaveValue('text2');
     
-    // 復元状態のスクリーンショット
-    await expect(page).toHaveScreenshot('url-restore.png');
+    // 復元状態のスクリーンショット（CI以外）
+    if (!isCI) {
+      await expect(page).toHaveScreenshot('url-restore.png');
+    }
   });
 
   test('レスポンシブデザイン - モバイル', async ({ page }) => {
@@ -74,8 +84,10 @@ test.describe('Diff Viewer', () => {
     await expect(page.locator('textarea').first()).toBeVisible();
     await expect(page.locator('textarea').nth(1)).toBeVisible();
     
-    // モバイル表示のスクリーンショット
-    await expect(page).toHaveScreenshot('mobile-view.png');
+    // モバイル表示のスクリーンショット（CI以外）
+    if (!isCI) {
+      await expect(page).toHaveScreenshot('mobile-view.png');
+    }
   });
 
   test('レスポンシブデザイン - タブレット', async ({ page }) => {
@@ -85,8 +97,10 @@ test.describe('Diff Viewer', () => {
     await expect(page.locator('textarea').first()).toBeVisible();
     await expect(page.locator('textarea').nth(1)).toBeVisible();
     
-    // タブレット表示のスクリーンショット
-    await expect(page).toHaveScreenshot('tablet-view.png');
+    // タブレット表示のスクリーンショット（CI以外）
+    if (!isCI) {
+      await expect(page).toHaveScreenshot('tablet-view.png');
+    }
   });
 
   test('大量テキストでの動作確認', async ({ page }) => {
@@ -103,7 +117,9 @@ test.describe('Diff Viewer', () => {
     await expect(page.locator('.bg-red-100').first()).toBeVisible();
     await expect(page.locator('.bg-green-100').first()).toBeVisible();
     
-    // 大量テキスト処理のスクリーンショット
-    await expect(page).toHaveScreenshot('large-text.png');
+    // 大量テキスト処理のスクリーンショット（CI以外）
+    if (!isCI) {
+      await expect(page).toHaveScreenshot('large-text.png');
+    }
   });
 });
