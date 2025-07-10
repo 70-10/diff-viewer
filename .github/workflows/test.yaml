@@ -31,7 +31,7 @@ jobs:
       - name: Check pnpm-lock.yaml
         run: git diff --exit-code pnpm-lock.yaml
       - name: "Test"
-        run: pnpx vitest --coverage.enabled true
+        run: pnpm test -- --coverage.enabled true
       - name: "Report coverage"
         if: always()
         uses: davelosert/vitest-coverage-report-action@v2
