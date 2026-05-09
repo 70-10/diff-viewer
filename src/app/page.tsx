@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Fragment, Suspense, useState } from "react";
 import { diffLines } from "diff";
 import lz from "lz-string";
 import { createShareUrl } from "@/create-share-url";
@@ -12,6 +12,14 @@ type DiffResult = {
 };
 
 export default function Home() {
+  return (
+    <Suspense>
+      <DiffViewer />
+    </Suspense>
+  );
+}
+
+function DiffViewer() {
   const searchParams = useSearchParams();
   const data = searchParams.get("data");
 
